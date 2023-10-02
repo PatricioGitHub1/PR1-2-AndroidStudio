@@ -1,5 +1,6 @@
 package com.example.guessnumbergame;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -31,12 +32,19 @@ public class MainActivity extends AppCompatActivity {
         // TextView para mostrar la info relevante en partida
         final TextView generalInfo = (TextView) findViewById(R.id.textView4);
         generalInfo.setMovementMethod(new ScrollingMovementMethod());
+
+        // Sacar el builder para el Dialog de fin de partida
+        AlertDialog.Builder dialog_builder = new AlertDialog.Builder(MainActivity.this);
+        dialog_builder.setMessage("Adivinaste el numero! Presiona el boton 'Try' para generar otro numero").setTitle("End Game");
+        AlertDialog dialogo = dialog_builder.create();
+
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (hidden_number == 0) {
                     hidden_number = (int) (1 + Math.random() * 100);
                     wholeText = "";
                     Toast.makeText(getApplicationContext(), "Numero secreto generado!", Toast.LENGTH_SHORT).show();
+
                 } else {
                     String guess = insertNumber.getText().toString();
                     if (guess.equals("")) {
@@ -48,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
                     else if(Integer.parseInt(guess) == hidden_number) {
                         num_intentos += 1;
                         textcheck.setText("Intentos: "+Integer.toString(num_intentos));
-                        wholeText += guess+" | HAS GANADO!!!\nAprete el boton para generar otro numero!\n";
+                        wholeText += guess+" | HAS GANADO!!!\n";
                         generalInfo.setText(wholeText);
+
+                        dialogo.show();
                         num_intentos = 0;
                         hidden_number = 0;
                     } else if (Integer.parseInt(guess) > hidden_number) {
